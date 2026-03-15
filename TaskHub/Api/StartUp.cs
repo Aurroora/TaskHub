@@ -3,6 +3,7 @@ using Api.UseCases.Users.Interfaces;
 using Dal;
 using Logic;
 using Microsoft.OpenApi.Models;
+using Api.Middleware;
 
 namespace Api;
 
@@ -78,6 +79,9 @@ public sealed class Startup
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskHub API v1");
             });
         }
+        
+        app.UseMiddleware<StudentInfo>();
+        app.UseMiddleware<ResponseTime>();
 
         app.UseRouting();
 
