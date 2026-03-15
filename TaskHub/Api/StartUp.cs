@@ -1,9 +1,10 @@
+using Api.Middleware;
+using Api.Services;
 using Api.UseCases.Users;
 using Api.UseCases.Users.Interfaces;
 using Dal;
 using Logic;
 using Microsoft.OpenApi.Models;
-using Api.Middleware;
 
 namespace Api;
 
@@ -62,6 +63,19 @@ public sealed class Startup
                 Version = "v1"
             });
         });
+
+        // Регистрация сервисов
+        // Singleton
+        services.AddSingleton<SingletonService1>();
+        services.AddSingleton<SingletonService2>();
+
+        // Scoped
+        services.AddScoped<ScopedService1>();
+        services.AddScoped<ScopedService2>();
+
+        // Transient
+        services.AddTransient<TransientService1>();
+        services.AddTransient<TransientService2>();
     }
 
     /// <summary>
