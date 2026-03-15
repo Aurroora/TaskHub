@@ -30,7 +30,7 @@ public sealed class Program
     private static void DemonstrateServiceLifetimes(IServiceProvider hostServices)
     {
 
-        // Создаем первый scope
+        // Первый scope
         Console.WriteLine("===== СОЗДАНИЕ SCOPE 1 =====");
         using (var scope1 = hostServices.CreateScope())
         {
@@ -44,7 +44,7 @@ public sealed class Program
             services.PrintServiceDifference<TransientService2>("Scope1");
         }
 
-        // Создаем второй scope
+        // Второй scope
         Console.WriteLine("===== СОЗДАНИЕ SCOPE 2 =====");
         using (var scope2 = hostServices.CreateScope())
         {
