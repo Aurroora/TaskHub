@@ -1,9 +1,15 @@
 using Api.Middleware;
 using Api.Services;
+using Api.UseCases.Tasks;
+using Api.UseCases.Tasks.Interfaces;
 using Api.UseCases.Users;
 using Api.UseCases.Users.Interfaces;
 using Dal;
+using Dal.Repositories;
 using Logic;
+using Logic.Tasks.Services;
+using Logic.Tasks.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 namespace Api;
@@ -35,12 +41,20 @@ public sealed class Startup
     /// <param name="services">Коллекция сервисов</param>
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddDbContext<TaskDbContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+        services.AddScoped<ITaskRepository, TaskRepository>();
+
+        services.AddScoped<IManageTaskUseCase, ManageTaskUseCase>();
+
+        services.AddScoped<ITaskService, TaskService>();
         services.AddControllers();
         services.AddDal();
         services.AddLogic();
-        
+
         services.AddScoped<IManageUserUseCase, ManageUserUseCase>();
-        
+
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder =>
@@ -63,8 +77,6 @@ public sealed class Startup
                 Version = "v1"
             });
         });
-
-        // Регистрация сервисов
         // Singleton
         services.AddSingleton<SingletonService1>();
         services.AddSingleton<SingletonService2>();
@@ -76,6 +88,13 @@ public sealed class Startup
         // Transient
         services.AddTransient<TransientService1>();
         services.AddTransient<TransientService2>();
+        // Регистрация слоёв
+        services.AddDal();
+        services.AddLogic();
+
+        // Регистрация UseCase'ов
+        services.AddScoped<IManageUserUseCase, ManageUserUseCase>();
+        services.AddScoped<IManageTaskUseCase, ManageTaskUseCase>();
     }
 
     /// <summary>
@@ -93,10 +112,8 @@ public sealed class Startup
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskHub API v1");
             });
         }
-        
         app.UseMiddleware<StudentInfo>();
         app.UseMiddleware<ResponseTime>();
-
         app.UseRouting();
 
         app.UseEndpoints(endpoints =>
