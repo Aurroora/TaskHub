@@ -5,6 +5,7 @@ using Api.UseCases.Tasks.Interfaces;
 using Api.UseCases.Users;
 using Api.UseCases.Users.Interfaces;
 using Dal;
+using Dal.Context;
 using Dal.Repositories;
 using Logic;
 using Logic.Tasks.Services;
@@ -75,6 +76,13 @@ public sealed class Startup
             {
                 Title = "TaskHub Api",
                 Version = "v1"
+            });
+
+            options.MapType<Guid>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Format = null,
+                Pattern = null
             });
         });
         // Singleton
