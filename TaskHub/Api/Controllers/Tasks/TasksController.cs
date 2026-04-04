@@ -3,6 +3,7 @@ using Api.Controllers.Tasks.Response;
 using Api.UseCases.Tasks.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Api.Attributes;
+using Api.Filters;
 
 namespace Api.Controllers.Tasks;
 
@@ -12,7 +13,9 @@ namespace Api.Controllers.Tasks;
 [ApiController]
 [Route("tasks")]
 [ResponseTimeHeader]
-[StudentInfoHeaders]
+[StudentInfoHeadersFilter]
+[RequestLoggingFilter]
+// [StudentInfoHeaders]
 public sealed class TasksController : ControllerBase
 {
     private readonly IManageTaskUseCase _taskUseCase;
@@ -24,11 +27,12 @@ public sealed class TasksController : ControllerBase
 
     [HttpPost]
     [ValidateUserRequest]
+    [ValidateCreateTaskRequestFilter]
     public async Task<ActionResult<TaskResponse>> CreateTaskAsync(
         [FromBody] CreateTaskRequest? request,
         CancellationToken cancellationToken)
     {
-        var userId = Guid.Parse("3432da03-671d-4c4a-ac48-2f1f9039a47a");
+        var userId = Guid.Parse("5b8b3178-9b5b-42e9-a16a-580f33857744");
         var task = await _taskUseCase.CreateTaskAsync(request!.Title ?? string.Empty, userId, cancellationToken);
         return StatusCode(201, task);
     }
@@ -55,6 +59,7 @@ public sealed class TasksController : ControllerBase
 
     [HttpPut("{id}/title")]
     [ValidateUserRequest]
+    [ValidateSetTaskTitleRequestFilter]
     public async Task<IActionResult> SetTaskTitleAsync(
         [FromRouteTaskId] Guid id,
         [FromBody] SetTaskTitleRequest? request,

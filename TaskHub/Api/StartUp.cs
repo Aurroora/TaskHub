@@ -120,8 +120,8 @@ public sealed class Startup
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskHub API v1");
             });
         }
-        app.UseMiddleware<StudentInfo>();
-        app.UseMiddleware<ResponseTime>();
+        // app.UseMiddleware<StudentInfo>();
+        // app.UseMiddleware<ResponseTime>();
         app.UseRouting();
 
         app.UseEndpoints(endpoints =>
