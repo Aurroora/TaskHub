@@ -1,7 +1,7 @@
 ﻿using Dal.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dal;
+namespace Dal.Context;
 
 /// <summary>
 /// Контекст базы данных для работы с задачами
